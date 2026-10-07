@@ -4,18 +4,15 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { useRef, useState } from 'react';
 import * as THREE from 'three';
 
-// 3D Αντικείμενο που περιστρέφεται & αντιδρά στο ποντίκι
 function FloatingShape() {
   const meshRef = useRef<THREE.Mesh>(null!);
   const [hovered, setHovered] = useState(false);
 
   useFrame((state, delta) => {
     if (meshRef.current) {
-      // Συνεχής περιστροφή
       meshRef.current.rotation.x += delta * 0.4;
       meshRef.current.rotation.y += delta * 0.5;
 
-      // Ελαφριά αλληλεπίδραση με την κίνηση του ποντικιού
       meshRef.current.position.x = THREE.MathUtils.lerp(
         meshRef.current.position.x,
         state.pointer.x * 1.2,
@@ -36,7 +33,6 @@ function FloatingShape() {
       onPointerOut={() => setHovered(false)}
       scale={hovered ? 1.15 : 1}
     >
-      {/* 3D Γεωμετρία (Torus Knot) */}
       <torusKnotGeometry args={[1, 0.35, 128, 32]} />
       <meshStandardMaterial
         color={hovered ? '#6366f1' : '#3b82f6'}
@@ -50,7 +46,6 @@ function FloatingShape() {
 export default function Home() {
   return (
     <main className="relative w-full h-screen bg-neutral-950 text-white overflow-hidden font-sans">
-      {/* 1. Navigation Bar */}
       <nav className="absolute top-0 left-0 w-full z-10 flex justify-between items-center p-8 border-b border-white/10 backdrop-blur-sm">
         <div className="text-xl font-bold tracking-widest">3DORAMA</div>
         <div className="flex gap-6 text-sm text-neutral-400 font-medium">
@@ -60,7 +55,6 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* 2. 3D Canvas Background/Hero */}
       <div className="absolute inset-0 z-0">
         <Canvas camera={{ position: [0, 0, 5], fov: 60 }}>
           <ambientLight intensity={0.6} />
@@ -70,7 +64,6 @@ export default function Home() {
         </Canvas>
       </div>
 
-      {/* 3. Hero Text Overlay */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4 pointer-events-none">
         <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-neutral-200 to-neutral-500 mb-4">
           IMMERSIVE 3D EXPERIENCES
