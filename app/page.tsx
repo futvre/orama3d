@@ -74,7 +74,7 @@ export default function Home() {
     },
   ];
 
-  // Λειτουργίες Καλαθιού
+  // Λειτουργίες Καλαθιού (Χωρίς αυτόματο άνοιγμα)
   const addToCart = (product: Product) => {
     setCart((prevCart) => {
       const existing = prevCart.find((item) => item.id === product.id);
@@ -85,7 +85,6 @@ export default function Home() {
       }
       return [...prevCart, { ...product, quantity: 1 }];
     });
-    setIsCartOpen(true);
   };
 
   const removeFromCart = (id: string) => {
@@ -141,7 +140,7 @@ export default function Home() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
               {totalCartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-cyan-400 text-slate-950 font-black text-xs w-5 h-5 rounded-full flex items-center justify-center shadow-md">
+                <span className="absolute -top-1 -right-1 bg-cyan-400 text-slate-950 font-black text-xs w-5 h-5 rounded-full flex items-center justify-center shadow-md animate-pulse">
                   {totalCartCount}
                 </span>
               )}
@@ -305,7 +304,7 @@ export default function Home() {
 
               <button 
                 onClick={() => addToCart(p)}
-                className="w-full py-3.5 bg-slate-900 hover:bg-cyan-600 text-white font-bold rounded-xl transition-colors duration-200 flex items-center justify-center gap-2 shadow-md"
+                className="w-full py-3.5 bg-slate-900 hover:bg-cyan-600 active:scale-95 text-white font-bold rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-md"
               >
                 <span>🛒</span> Προσθήκη στο Καλάθι
               </button>
