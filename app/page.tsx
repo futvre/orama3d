@@ -6,7 +6,7 @@ import { Suspense } from 'react';
 
 function Model() {
   const { scene } = useGLTF('/model.glb');
-  return <primitive object={scene} scale={1.5} position={[0, -0.8, 0]} />;
+  return <primitive object={scene} scale={1.4} position={[0, -0.2, 0]} />;
 }
 
 export default function Home() {
