@@ -6,7 +6,7 @@ import { Suspense } from 'react';
 
 function Model() {
   const { scene } = useGLTF('/model.glb');
-  return <primitive object={scene} scale={1.6} position={[0, -0.6, 0]} />;
+  return <primitive object={scene} scale={1.5} position={[0, -0.8, 0]} />;
 }
 
 export default function Home() {
@@ -30,19 +30,19 @@ export default function Home() {
     { 
       num: '03', 
       title: 'Μετα-επεξεργασία & Φινίρισμα', 
-      desc: 'Λείανση, ασταρωμα, βαφή και τελικό μοντάρισμα για αποτελέσματα που μοιάζουν με βιομηχανικό τελικό προϊόν.' 
+      desc: 'Λείανση, αστάρωμα, βαφή και τελικό μοντάρισμα για αποτελέσματα που μοιάζουν με βιομηχανικό τελικό προϊόν.' 
     },
   ];
 
   return (
     <div className="bg-slate-950 text-white font-sans selection:bg-cyan-500 selection:text-black overflow-x-hidden relative">
       
-      {/* Dynamic Background Glow Orbs for High Contrast & Colors */}
+      {/* Background Glow Orbs */}
       <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-cyan-600/20 to-purple-600/20 rounded-full blur-[140px] pointer-events-none -z-10" />
       <div className="absolute top-[1200px] right-0 w-[500px] h-[500px] bg-purple-600/15 rounded-full blur-[130px] pointer-events-none -z-10" />
       <div className="absolute top-[2200px] left-0 w-[500px] h-[500px] bg-cyan-600/15 rounded-full blur-[130px] pointer-events-none -z-10" />
 
-      {/* Fixed Navigation Header */}
+      {/* Navigation Header */}
       <header className="fixed top-0 left-0 w-full z-50 backdrop-blur-xl bg-slate-950/80 border-b border-slate-800/80">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <a href="#hero" className="text-2xl font-black tracking-widest bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-indigo-300 to-purple-400">
@@ -57,7 +57,7 @@ export default function Home() {
       </header>
 
       {/* SECTION 1: HERO */}
-      <section id="hero" className="relative w-full h-screen flex items-center justify-center pt-20">
+      <section id="hero" className="relative w-full h-screen flex flex-col justify-start items-center pt-28 pb-12 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Canvas dpr={[1, 1.5]} camera={{ position: [0, 0, 5], fov: 50 }}>
             <AdaptiveDpr />
@@ -75,21 +75,21 @@ export default function Home() {
           </Canvas>
         </div>
 
-        {/* Hero Content */}
-        <div className="relative z-10 text-center px-4 pointer-events-none mt-32 md:mt-48">
-          <span className="inline-block px-4 py-1.5 mb-4 text-xs font-mono font-bold tracking-widest text-cyan-400 bg-cyan-950/80 border border-cyan-500/30 rounded-full backdrop-blur-md">
+        {/* Hero Text Content */}
+        <div className="relative z-10 text-center px-4 pointer-events-none mt-2 md:mt-4 max-w-4xl">
+          <span className="inline-block px-4 py-1.5 mb-3 text-xs font-mono font-bold tracking-widest text-cyan-400 bg-cyan-950/80 border border-cyan-500/30 rounded-full backdrop-blur-md">
             PREMIUM 3D PRINTING SERVICES
           </span>
-          <h1 className="text-4xl md:text-7xl font-extrabold tracking-tight text-white mb-4 drop-shadow-[0_10px_35px_rgba(0,0,0,0.8)]">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold tracking-tight text-white mb-3 drop-shadow-[0_10px_35px_rgba(0,0,0,0.9)]">
             ΑΠΟ ΤΗΝ ΙΔΕΑ ΣΤΗΝ <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">ΠΡΑΓΜΑΤΙΚΟΤΗΤΑ</span>
           </h1>
-          <p className="text-slate-300 text-base md:text-xl max-w-2xl mx-auto mb-8 font-normal drop-shadow-md">
+          <p className="text-slate-300 text-sm md:text-base max-w-2xl mx-auto mb-6 font-normal drop-shadow-md">
             Επαγγελματικές υπηρεσίες 3D εκτύπωσης, μοντελοποίησης & πρωτοτυποποίησης υψηλής ακρίβειας.
           </p>
           <div className="pointer-events-auto">
             <a 
               href="#contact" 
-              className="inline-block px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-extrabold rounded-full hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] hover:scale-105 transition-all duration-300"
+              className="inline-block px-8 py-3.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-extrabold rounded-full hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] hover:scale-105 transition-all duration-300 text-sm md:text-base"
             >
               Ζητήστε Προσφορά
             </a>
