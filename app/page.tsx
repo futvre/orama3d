@@ -1,8 +1,8 @@
 'use client';
 
+import { useState, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { useGLTF, OrbitControls, Environment, Float, AdaptiveDpr } from '@react-three/drei';
-import { Suspense } from 'react';
 
 function Model() {
   const { scene } = useGLTF('/model.glb');
@@ -10,6 +10,8 @@ function Model() {
 }
 
 export default function Home() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const projects = [
     { title: 'Βιομηχανικά Πρωτότυπα', category: '3D Print & Engineering', desc: 'Εκτύπωση λειτουργικών εξαρτημάτων υψηλής αντοχής με FDM & Resin.' },
     { title: 'Αρχιτεκτονικές Μακέτες', category: '3D Scale Modeling', desc: 'Λεπτομερείς μακέτες κτιρίων και εσωτερικών χώρων με απόλυτη ακρίβεια.' },
@@ -46,14 +48,60 @@ export default function Home() {
       <header className="fixed top-0 left-0 w-full z-50 backdrop-blur-xl bg-[#090d16]/80 border-b border-slate-700/60">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <a href="#hero" className="text-2xl font-black tracking-widest bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-indigo-300 to-purple-400">
-            3DORAMA
+            orama3D
           </a>
-          <nav className="flex gap-6 md:gap-8 text-sm font-bold text-slate-200">
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex gap-8 text-sm font-bold text-slate-200">
             <a href="#portfolio" className="hover:text-cyan-400 transition-colors">Portfolio</a>
             <a href="#services" className="hover:text-cyan-400 transition-colors">Υπηρεσίες</a>
             <a href="#contact" className="hover:text-cyan-400 transition-colors">Επικοινωνία</a>
           </nav>
+
+          {/* Mobile Hamburger Button */}
+          <button 
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="md:hidden text-slate-200 hover:text-cyan-400 focus:outline-none p-2"
+            aria-label="Toggle Menu"
+          >
+            {isMenuOpen ? (
+              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            )}
+          </button>
         </div>
+
+        {/* Mobile Dropdown Menu */}
+        {isMenuOpen && (
+          <nav className="md:hidden bg-[#090d16]/95 border-b border-slate-700/80 backdrop-blur-2xl px-6 py-6 flex flex-col gap-4 animate-in slide-in-from-top-5 duration-200">
+            <a 
+              href="#portfolio" 
+              onClick={() => setIsMenuOpen(false)}
+              className="text-slate-200 hover:text-cyan-400 font-bold text-lg py-2 border-b border-slate-800/80 transition-colors"
+            >
+              Portfolio
+            </a>
+            <a 
+              href="#services" 
+              onClick={() => setIsMenuOpen(false)}
+              className="text-slate-200 hover:text-cyan-400 font-bold text-lg py-2 border-b border-slate-800/80 transition-colors"
+            >
+              Υπηρεσίες
+            </a>
+            <a 
+              href="#contact" 
+              onClick={() => setIsMenuOpen(false)}
+              className="text-slate-200 hover:text-cyan-400 font-bold text-lg py-2 transition-colors"
+            >
+              Επικοινωνία
+            </a>
+          </nav>
+        )}
       </header>
 
       {/* SECTION 1: HERO */}
@@ -194,7 +242,7 @@ export default function Home() {
           {/* Col 1: Brand */}
           <div className="md:col-span-2">
             <a href="#hero" className="text-2xl font-black tracking-widest bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-400">
-              3DORAMA
+              orama3D
             </a>
             <p className="text-slate-300 text-sm mt-4 max-w-sm leading-relaxed">
               Επαγγελματικές υπηρεσίες 3D εκτύπωσης & πρωτοτυποποίησης. Δίνουμε φυσική υπόσταση στις ψηφιακές σας δημιουργίες με ακρίβεια και ποιότητα.
@@ -226,7 +274,7 @@ export default function Home() {
 
         {/* Bottom Bar */}
         <div className="max-w-7xl mx-auto px-6 pt-8 border-t border-slate-800/80 flex flex-col md:flex-row items-center justify-between text-xs text-slate-400 gap-4">
-          <p>© {new Date().getFullYear()} 3DORAMA. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} orama3D. All rights reserved.</p>
           <div className="flex gap-6">
             <a href="#hero" className="hover:text-slate-200 transition-colors">Επιστροφή στην κορυφή ↑</a>
           </div>
