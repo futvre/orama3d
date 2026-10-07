@@ -29,7 +29,11 @@ export default function Home() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // 1. Φόρτωση καλαθιού από το localStorage κατά το άνοιγμα της σελίδας
+  // States για Αναζήτηση & Κατηγορίες
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('Όλα');
+
+  // Φόρτωση καλαθιού από το localStorage
   useEffect(() => {
     const savedCart = localStorage.getItem('orama3d_cart');
     if (savedCart) {
@@ -42,14 +46,14 @@ export default function Home() {
     setIsLoaded(true);
   }, []);
 
-  // 2. Αυτόματη ενημέρωση του localStorage όποτε αλλάζουν τα προϊόντα στο καλάθι
+  // Ενημέρωση localStorage
   useEffect(() => {
     if (isLoaded) {
       localStorage.setItem('orama3d_cart', JSON.stringify(cart));
     }
   }, [cart, isLoaded]);
 
-  // Λίστα Προϊόντων προς Πώληση
+  // Λίστα Προϊόντων
   const products: Product[] = [
     { 
       id: '1',
@@ -76,6 +80,16 @@ export default function Home() {
       image: '/model.glb'
     },
   ];
+
+  const categories = ['Όλα', ...Array.from(new Set(products.map((p) => p.category)))];
+
+  // Φιλτράρισμα Προϊόντων με βάση την Αναζήτηση & την Κατηγορία
+  const filteredProducts = products.filter((p) => {
+    const matchesCategory = selectedCategory === 'Όλα' || p.category === selectedCategory;
+    const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          p.desc.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   const services = [
     { 
@@ -201,7 +215,7 @@ export default function Home() {
         )}
       </header>
 
-      {/* SHOPPING CART DRAWER / MODAL */}
+      {/* SHOPPING CART DRAWER */}
       {isCartOpen && (
         <div className="fixed inset-0 z-50 flex justify-end">
           <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm" onClick={() => setIsCartOpen(false)} />
@@ -295,7 +309,7 @@ export default function Home() {
 
       {/* SECTION 2: E-SHOP / PRODUCTS */}
       <section id="shop" className="relative z-10 max-w-7xl mx-auto px-6 py-28 border-t border-slate-200">
-        <div className="mb-16 text-center md:text-left">
+        <div className="mb-12 text-center md:text-left">
           <span className="inline-block px-3 py-1 text-xs font-mono font-bold text-purple-700 bg-purple-100 border border-purple-300 rounded-md tracking-widest uppercase mb-2">
             Store & E-Shop
           </span>
@@ -307,31 +321,79 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {products.map((p) => (
-            <div key={p.id} className="group bg-white border border-slate-200/90 rounded-3xl p-6 shadow-xl shadow-slate-200/60 hover:border-cyan-500 hover:shadow-2xl transition-all duration-300 flex flex-col justify-between">
-              <div>
-                <div className="w-full h-52 bg-slate-100 rounded-2xl mb-6 flex flex-col items-center justify-center text-slate-400 font-mono text-xs border border-slate-200 group-hover:border-cyan-300 transition-colors relative overflow-hidden">
-                  <span className="text-3xl mb-2">📦</span>
-                  <span>[ Φωτογραφία Προϊόντος ]</span>
-                </div>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs font-mono font-bold text-cyan-700 uppercase bg-cyan-50 px-2.5 py-1 rounded border border-cyan-200">{p.category}</span>
-                  <span className="text-xl font-black text-slate-900">{p.price.toFixed(2)} €</span>
-                </div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-2">{p.title}</h3>
-                <p className="text-slate-600 text-sm leading-relaxed mb-6">{p.desc}</p>
-              </div>
-
-              <button 
-                onClick={() => addToCart(p)}
-                className="w-full py-3.5 bg-slate-900 hover:bg-cyan-600 active:scale-95 text-white font-bold rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-md"
-              >
-                <span>🛒</span> Προσθήκη στο Καλάθι
+        {/* SEARCH & CATEGORY FILTERS */}
+        <div className="mb-12 space-y-6">
+          {/* Search Input Bar */}
+          <div className="relative max-w-md">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Αναζήτηση προϊόντος..."
+              className="w-full bg-white border border-slate-300 rounded-2xl pl-11 pr-4 py-3 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all text-sm shadow-sm"
+            />
+            <svg className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            {searchQuery && (
+              <button onClick={() => setSearchQuery('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 font-bold text-xs">
+                ✕
               </button>
-            </div>
-          ))}
+            )}
+          </div>
+
+          {/* Category Filter Pills */}
+          <div className="flex flex-wrap gap-2">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 border ${
+                  selectedCategory === cat
+                    ? 'bg-slate-900 text-white border-slate-900 shadow-md'
+                    : 'bg-white text-slate-600 border-slate-200 hover:border-cyan-400 hover:text-slate-900'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
         </div>
+
+        {/* PRODUCTS GRID */}
+        {filteredProducts.length === 0 ? (
+          <div className="text-center py-16 bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
+            <span className="text-4xl mb-3 block">🔍</span>
+            <h3 className="text-lg font-bold text-slate-900 mb-1">Δεν βρέθηκαν προϊόντα</h3>
+            <p className="text-sm text-slate-500">Δοκιμάστε διαφορετικούς όρους αναζήτησης ή επιλέξτε άλλη κατηγορία.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {filteredProducts.map((p) => (
+              <div key={p.id} className="group bg-white border border-slate-200/90 rounded-3xl p-6 shadow-xl shadow-slate-200/60 hover:border-cyan-500 hover:shadow-2xl transition-all duration-300 flex flex-col justify-between">
+                <div>
+                  <div className="w-full h-52 bg-slate-100 rounded-2xl mb-6 flex flex-col items-center justify-center text-slate-400 font-mono text-xs border border-slate-200 group-hover:border-cyan-300 transition-colors relative overflow-hidden">
+                    <span className="text-3xl mb-2">📦</span>
+                    <span>[ Φωτογραφία Προϊόντος ]</span>
+                  </div>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-xs font-mono font-bold text-cyan-700 uppercase bg-cyan-50 px-2.5 py-1 rounded border border-cyan-200">{p.category}</span>
+                    <span className="text-xl font-black text-slate-900">{p.price.toFixed(2)} €</span>
+                  </div>
+                  <h3 className="text-2xl font-bold text-slate-900 mb-2">{p.title}</h3>
+                  <p className="text-slate-600 text-sm leading-relaxed mb-6">{p.desc}</p>
+                </div>
+
+                <button 
+                  onClick={() => addToCart(p)}
+                  className="w-full py-3.5 bg-slate-900 hover:bg-cyan-600 active:scale-95 text-white font-bold rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-md"
+                >
+                  <span>🛒</span> Προσθήκη στο Καλάθι
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* SECTION 3: SERVICES */}
