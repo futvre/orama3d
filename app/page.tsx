@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { useGLTF, OrbitControls, Environment, Float, AdaptiveDpr } from '@react-three/drei';
 
@@ -27,6 +27,27 @@ export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // 1. Φόρτωση καλαθιού από το localStorage κατά το άνοιγμα της σελίδας
+  useEffect(() => {
+    const savedCart = localStorage.getItem('orama3d_cart');
+    if (savedCart) {
+      try {
+        setCart(JSON.parse(savedCart));
+      } catch (e) {
+        console.error('Error parsing cart from localStorage:', e);
+      }
+    }
+    setIsLoaded(true);
+  }, []);
+
+  // 2. Αυτόματη ενημέρωση του localStorage όποτε αλλάζουν τα προϊόντα στο καλάθι
+  useEffect(() => {
+    if (isLoaded) {
+      localStorage.setItem('orama3d_cart', JSON.stringify(cart));
+    }
+  }, [cart, isLoaded]);
 
   // Λίστα Προϊόντων προς Πώληση
   const products: Product[] = [
@@ -74,7 +95,7 @@ export default function Home() {
     },
   ];
 
-  // Λειτουργίες Καλαθιού (Χωρίς αυτόματο άνοιγμα)
+  // Λειτουργίες Καλαθιού
   const addToCart = (product: Product) => {
     setCart((prevCart) => {
       const existing = prevCart.find((item) => item.id === product.id);
